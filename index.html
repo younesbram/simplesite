@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>younes</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤩</text></svg>">
+    <meta name="description" content="younes, security software engineer, enjoyer of computers and science">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #f0f4f8, #e0e7eb 50%, #d0dbe0 100%);
+            color: #333;
+            height: 100%;
+            overflow: hidden;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        h1:hover {
+            color: #3498db;
+        }
+        p {
+            font-size: 1.1em;
+            color: #34495e;
+            line-height: 1.6;
+        }
+        .highlight {
+            color: #2980b9;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .highlight:hover {
+            color: #3498db;
+        }
+        #links {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        #links a {
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+        }
+        #links a:hover {
+            transform: scale(1.2);
+            text-decoration: none;
+        }
+        #terminal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #ecf0f1;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        #terminal.active {
+            opacity: 1;
+        }
+        #terminal-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        #terminal-output {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        #input-line {
+            display: flex;
+            align-items: center;
+        }
+        #prompt {
+            margin-right: 5px;
+        }
+        #terminal-input {
+            flex-grow: 1;
+            background-color: transparent;
+            border: none;
+            color: #ecf0f1;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            outline: none;
+            caret-color: #ecf0f1;
+        }
+        .misc-item {
+            margin-bottom: 10px;
+            color: #ecf0f1;
+        }
+        .misc-item a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .misc-content-frame {
+            display: none;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 560px;
+            height: 315px;
+            background-color: #2c3e50;
+            border: 1px solid #34495e;
+            padding: 5px;
+            box-sizing: border-box;
+            z-index: 10;
+            cursor: move;
+        }
+        .misc-content-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .misc-content-frame-header {
+            background-color: #34495e;
+            color: #ecf0f1;
+            padding: 5px;
+            font-size: 14px;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            cursor: grab;
+        }
+        .misc-content-frame-header button {
+            background: none;
+            border: none;
+            color: #ecf0f1;
+            cursor: pointer;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="name">younes brahimi</h1>
+        <p>security software engineer</p>
+        <p id="about">Greetings! I am a security software engineer. Passionate for <span class="highlight" data-keyword="cryptography">cryptography</span> and all things <span class="highlight" data-keyword="cyber security">cyber security</span>. Technical consultant for full-stack engineering. Currently developing cloud based science applications. Interested in AI and its implications. Want to collaborate/hire me? Click on my name or dm me on X (formerly twitter). 23.6 years old.</p>
+        <div id="links">
+            <a href="https://github.com/younesbram" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+            <a href="https://twitter.com/YounesBrahimi" target="_blank">𝕏</a>
+            <a href="mailto:younes@younes.ca">✉️</a>
+            <a href="https://www.linkedin.com/in/younesbrahimi" target="_blank"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTkgMGgtMTRjLTIuNzYxIDAtNSAyLjIzOS01IDV2MTRjMCAyLjc2MSAyLjIzOSA1IDUgNWgxNGMyLjc2MiAwIDUtMi4yMzkgNS01di0xNGMwLTIuNzYxLTIuMjM4LTUtNS01em0tMTEgMTloLTN2LTExaDN2MTF6bS0xLjUtMTIuMjY4Yy0uOTY2IDAtMS43NS0uNzktMS43NS0xLjc2NHMuNzg0LTEuNzY0IDEuNzUtMS43NjQgMS43NS43OSAxLjc1IDEuNzY0LS43ODMgMS43NjQtMS43NSAxLjc2NHptMTMuNSAxMi4yNjhoLTN2LTUuNjA0YzAtMy4zNjgtNC0zLjExMy00IDB2NS42MDRoLTN2LTExaDN2MS43NjVjMS4zOTYtMi41ODYgNy0yLjc3NyA3IDIuNDc2djYuNzU5eiIvPjwvc3ZnPg=="></a>
+        </div>
+    </div>
+    <div id="terminal">
+        <div id="terminal-content">
+            <div id="terminal-output"></div>
+            <div id="input-line">
+                <span id="prompt">$ </span>
+                <input type="text" id="terminal-input" autofocus>
+            </div>
+        </div>
+    </div>
+    <div id="misc-content"></div>
+    <div class="misc-content-frame" id="misc-frame">
+        <div class="misc-content-frame-header" id="misc-frame-header">
+            <span id="misc-filename"></span>
+            <span>
+                <button id="maximize-btn">⌞⌝</button>
+                <button id="open-tab-btn">👉</button>
+                <button id="close-btn">❌</button>
+            </span>
+        </div>
+        <iframe id="misc-frame-iframe"></iframe>
+    </div>
+
+    <script>
+        let nameClickCount = 0;
+        let currentDirectory = '/';
+        let commandHistory = [];
+        let historyIndex = -1;
+        const fileSystem = {
+            '/': ['usr', 'etc', 'misc', 'art.exe'],
+            '/usr': ['leaks.exe', 'whereami', 'haveibeenpwned.exe'],
+            '/etc': ['shadow'],
+            '/etc/shadow': ['passwd.test'],
+            '/misc': ['yup.mp4', 'to-the-hills.mp4', 'cheap_offsec_team.html', '2025_internships.html', 'security_books.html', 'diet_motivation--.mp4', 'diet_motivation++.mp4', 'rip_zyzz.mp4', 'the_professor_and1.mp4', 'legend_from_madeira.mp4']
+        };
+
+        const miscLinks = {
+            'yup.mp4': 'https://www.youtube.com/embed/_m0bI82Rz_k',
+            'to-the-hills.mp4': 'https://www.youtube.com/embed/86URGgqONvA?si=Zfvx0i2VThgmDb1l',
+            'cheap_offsec_team.html': 'https://arxiv.org/html/2406.01637v1',
+            '2025_internships.html': 'https://github.com/SimplifyJobs/Summer2025-Internships',
+            'security_books.html': 'https://people.scs.carleton.ca/~paulv/5900wBooks.html',
+            'diet_motivation--.mp4': 'https://www.youtube.com/embed/H3HZVrXuYzg',
+            'diet_motivation++.mp4': 'https://www.youtube.com/embed/l4OIzjpKTXI',
+            'rip_zyzz.mp4': 'https://www.youtube.com/embed/qgnKpbnbAdg',
+            'the_professor_and1.mp4': 'https://www.youtube.com/embed/LweNdi92DW0',
+            'legend_from_madeira.mp4': 'https://www.youtube.com/embed/xqFTe96OWPU',
+        };
+
+        const asciiArts = [
+            `                      _..-'(                       )`-.._
+                   ./'. '||\\.       (\_/)       .//||` .`\.
+                ./'.|'.'||||\\|..    )O O(    ..|//||||`.`|.`\.
+             ./'..|'.|| |||||\`````` '`"'` ''''''/||||| ||.`|..`\.
+           ./'.||'.|||| ||||||||||||.     .|||||||||||| |||||.`||.`\.
+          /'|||'.|||||| ||||||||||||{     }|||||||||||| ||||||.`|||`\
+         '.|||'.||||||| ||||||||||||{     }|||||||||||| |||||||.`|||.`
+        '.||| ||||||||| |/'   ``\||``     ''||/''   `\| ||||||||| |||.`
+        |/' \./'     `\./         \!|\   /|!/         \./'     `\./ `\|
+        V    V         V          }' `\ /' `{          V         V    V
+        `    `         `               V               '         '    '
+`,
+            `                                  )___(
+                           _______/__/_
+                  ___     /===========|   ___
+ ____       __   [\\\]___/____________|__[///]   __
+ \   \_____[\\]__/___________________________\__[//]___
+  \40A                                                 |
+   \                                                  /
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`,
+            `       .-~~``~~-,
+      (          \
+   .--'`-.__,     \
+  /      |\O/      |
+ |,      /         |
+ \   ,--`\         |
+  `.(   /          \
+       /            \
+      / .  ;    :.   \
+     /__;   \   | \   \
+     /   '. |\_ /-.'-._\
+    |      `   `        \
+    |    /               \
+    |    |                |
+    |    |                \
+    \    \                 |
+     \    |  |   |   \     \
+      \   \  \   \    \     |
+       '.  \  \  ' \   \     \
+         \  \  `\   `\  `\    \
+          |  `\  `\   `.  '.   \
+           \   `-. '._  '-. '._/\
+            |     \-._;-._ '-._  \
+            \      `\     `--` `--\
+             ;_      `-.           |
+~==~==jgs==~,-.-.-'`;'=~=-.,_   __/=~=~=~~=
+  =_ = -_ -( ( ( .-`( ( ( .-``"`-_ = - _ -
+- -   =   - ` ` ` _= ` ` `   =  -  -    =
+~~==~=~~==~=~~=~~=~=~==~~=~~==~~=~~=~~~===~~
+                         \ . \  . '|
+                          \   . .' /
+                           '.   \.'|
+                             '-.__/`,
+            `             ________________________________________________
+            /                                                \
+           |    _________________________________________     |
+           |   |                                         |    |
+           |   |  C:\Users\Younes> ransomware.c          |    |
+           |   |  [WARNING] System encrypted with AES!   |    |
+           |   |                                         |    |
+           |   |                                         |    |
+           |   |                                         |    |
+           |   |                                         |    |
+           |   |                                         |    |
+           |   |                                         |    |
+           |   |                                         |    |
+           |   |                                         |    |
+           |   |                                         |    |
+           |   |                                         |    |
+           |   |_________________________________________|    |
+           |                                                  |
+            \_________________________________________________/
+                   \___________________________________/
+                ___________________________________________
+             _-'    .-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.  --- `-_
+          _-'.-.-. .---.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--.  .-.-.`-_
+       _-'.-.-.-. .---.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-`__`. .-.-.-.`-_
+    _-'.-.-.-.-. .-----.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-----. .-.-.-.-.`-_
+ _-'.-.-.-.-.-. .---.-. .-------------------------. .-.---. .---.-.-.-.`-_
+:-------------------------------------------------------------------------:
+`---._.-------------------------------------------------------------._.---'`,
+            `                       .,,uod8B8bou,,.
+              ..,uod8BBBBBBBBBBBBBBBBRPFT?l!i:.
+         ,=m8BBBBBBBBBBBBBBBRPFT?!||||||||||||||
+         !...:!TVBBBRPFT||||||||||!!^^""'   ||||
+         !.......:!?|||||!!^^""'            ||||
+         !.........||||                     ||||
+         !.........||||                     ||||
+         !.........||||                     ||||
+         !.........||||                     ||||
+         !.........||||                     ||||
+         !.........||||                     ||||
+         `.........||||                    ,||||
+          .;.......||||               _.-!!|||||
+   .,uodWBBBBb.....||||       _.-!!|||||||||!:'
+!YBBBBBBBBBBBBBBb..!|||:..-!!|||||||!iof68BBBBBb....
+!..YBBBBBBBBBBBBBBb!!||||||||!iof68BBBBBBRPFT?!::   `.
+!....YBBBBBBBBBBBBBBbaaitf68BBBBBBRPFT?!:::::::::     `.
+!......YBBBBBBBBBBBBBBBBBBBRPFT?!::::::;:!^"`;:::       `.
+!........YBBBBBBBBBBRPFT?!::::::::::^''...::::::;         iBBbo.
+`..........YBRPFT?!::::::::::::::::::::::::;iof68bo.      WBBBBbo.
+  `..........:::::::::::::::::::::::;iof688888888888b.     `YBBBPV'
+    `........::::::::::::::::;iof688888888888888888888b.     `
+      `......:::::::::;iof688888888888888888888888888888b.
+        `....:::;iof688888888888888888888888888888888899fT!
+          `..::!8888888888888888888888888888888899fT|!^"'
+            `' !!988888888888888888888888899fT|!^"'
+                `!!8888888888888888899fT|!^"'
+                  `!988888888899fT|!^"'
+                    `!9899fT|!^"'
+                      `!^"'`,
+            `      _=====_                               _=====_
+     / _____ \                             / _____ \
+   +.-'_____'-.---------------------------.-'_____'-.+
+  /   |     |  '.        S O N Y        .'  |  _  |   \
+ / ___| /|\ |___ \                     / ___| /_\ |___ \
+/ |      |      | ;  __           _   ; | _         _ | ;
+| | <---   ---> | | |__|         |_:> | ||_|       (_)| |
+| |___   |   ___| ;SELECT       START ; |___       ___| ;
+|\    | \|/ |    /  _     ___      _   \    | (X) |    /|
+| \   |_____|  .','" "', |___|  ,'" "', '.  |_____|  .' |
+|  '-.______.-' /       \ANALOG/       \  '-._____.-'   |
+|               |       |------|       |                |
+|              /\       /      \       /\               |
+|             /  '.___.'        '.___.'  \              |
+|            /                            \             |
+ \          /                              \           /
+  \________/                                \_________/`,
+            `         _nnnn_                      
+        dGGGGMMb     ,"""""""""""""".
+       @p~qp~~qMb    | Linux Rules! |
+       M|@||@) M|   _;..............'
+       @,----.JM| -'
+      JS^\__/  qKL
+     dZP        qKRb
+    dZP          qKKb
+   fZP            SMMb
+   HZM            MMMM
+   FqM            MMMM
+ __| ".        |\dS"qML
+ |    `.       | `' \Zq
+_)      \.___.,|     .'
+\____   )MMMMMM|   .'
+     `-'       `--'    `,
+            `                 ."-,.__
+                 `.     `.  ,
+              .--'  .._,'"-' `.
+             .    .'         `'
+             `.   /          ,'
+               `  '--.   ,-"'
+                `"`   |  \
+                   -. \, |
+                    `--Y.'      ___.
+                         \     L._, \
+               _.,        `.   <  <\                _
+             ,' '           `, `.   | \            ( `
+          ../, `.            `  |    .\`.           \ \_
+         ,' ,..  .           _.,'    ||\l            )  '".
+        , ,'   \           ,'.-.`-._,'  |           .  _._`.
+      ,' /      \ \        `' ' `--/   | \          / /   ..\
+    .'  /        \ .         |\__ - _ ,'` `        / /     `.`.
+    |  '          ..         `-...-"  |  `-'      / /        . `.
+    | /           |L__           |    |          / /          `. `.
+   , /            .   .          |    |         / /             ` `
+  / /          ,. ,`._ `-_       |    |  _   ,-' /               ` \
+ / .           \"`_/. `-_ \_,.  ,'    +-' `-'  _,        ..,-.    \`.
+.  '         .-f    ,'   `    '.       \__.---'     _   .'   '     \ \
+' /          `.'    l     .' /          \..      ,_|/   `.  ,'`     L`
+|'      _.-""` `.    \ _,'  `            \ `.___`.'"`-.  , |   |    | \
+||    ,'      `. `.   '       _,...._        `  |    `/ '  |   '     .|
+||  ,'          `. ;.,.---' ,'       `.   `.. `-'  .-' /_ .'    ;_   ||
+|| '              V      / /           `   | `   ,'   ,' '.    !  `. ||
+||/            _,-------7 '              . |  `-'    l         /    `||
+. |          ,' .-   ,' ||               | .-.        `.      .'     ||
+ `'        ,'    `".'    |               |    `.        '. -.'       `'
+          /      ,'      |               |,'    \-.._,.'/'
+          .     /        .               .       \    .''
+        .`.    |         `.             /         :_,'.'
+          \ `...\   _     ,'-.        .'         /_.-'
+           `-.__ `,  `'   .  _.>----''.  _  __  /
+                .'        /"'          |  "'   '_
+               /_|.-'\ ,".             '.'`__'-( \
+                 / ,"'"\,'               `/  `-.|"`,
+            `          .s$P*.s$$$s.`*T$$b T TP$P.d$P .sd$s.                
+        .s$P .s$$$$$$$b. T$$b T:P d$$P.d$$$$$$bs.             
+       d$$P d$$$$P'`T$$$b $$$;:$bd$$$$$$b`T$$*$$$b.           
+      d$$P d$$$P' .+. *$$:$$$;.$$$P^*""*^b.$$b T$$$b          
+     d$P .d$$$b.s$$$$$b TP^TP dP',d$$$$$s.`T$$b T$$$b         
+    d$P d$$P T$$$P*""*^b.b d,P^*"*^T$$$$$$$b`T$b$$$$$.        
+   ,$P d$P .$$$P'       `'*`        `T$$$$$$$b`T$$$$$$         
+   :$ d$P d$$$P                       `T$$$$$$b TPT$$$b        
+  :$$d$$ d$$$P                          T$$$$$$b T.`T$$;       
+  :$$$$$d$$$P                            T$$$$ $b T.T$$:       
+  $$$$$P$$$$                              T$$$$T$b T `T$       
+  $P$$$;$$$;                               T$^$b Tb b :$       
+  $`$$$ $$$;                                T.T$b TY$,:$       
+  $:$$$ $$$'                                `$ T$; $$;'$       
+  $;$$$;$$$                                  `b T; $$$ $       
+  $:T$$;$$$  .d$$s.                    .s$$b..$;:$;$$$.T       
+ / __`*:$$$ *'   `*Tb._            _.dP*'   `*$;:$:$P__ \      
+..' .`.:$$$         `*Ts'        `sP*'        $$:$$P'. `,,     
+;  /   ,$$;   .+s**s.   `.           .s**s+.  T$:PP'  \  :     
+: ,   /:$$;   \ *ss* \    ;         / *ss* /    +: \   . ;     
+ .`  :  $$;,  .+s$$$s+.            .+s$$$s+.  .* ;  ;  ',      
+  \   *.:$$,*d$P*"$$$T$b  ,+**+,  d$P*"$$$T$b*   .*    /       
+   \    `$$;:$; +:$$$:$$;*      *:$; +:$$$:$$;  :     /        
+         $$; T$b._$$$d$P          T$b._$$$d$P   ;              
+     `._.:$$, `*T$$$P*'            `*T$$$P*'    :._.'          
+         |$$;             '                     |P$$b.         
+         ;`$$,           :.     ,               :b.`T$b        
+         ` T$$b._        `*.__.*'               d$$b T$b       
+          . *TP*'           ""                 d$$$$b.:$;      
+           \                                  dP T$$$$$$$      
+            \          .+*"*--*"*+.          d$b. T$$^$$$      
+             `.       :._.--..--._.;       .'$$$$; $$ $$$      
+               ;.      `.        .'      .'  $$$$$ $P $$;      
+               : `.      `*----*'      .'    $$$$$ $b $P       
+               |   `.                .'      $$$$$Y$$dP        
+        [bug]  :     `.            .'        :T$$P$$P,db.      
+              /        `-.      .-'          dbT d$Pd$$$$b.    
+             /            `****'            d$$$PT$$$b T$$$b   
+           .'                              d$$$P db`T$b T$$$b  
+        _.'                               :$$$P.d$$b:$$$`$$$$; 
+   _.-*' `.                               $$$$:$$$$$;$$$:$$$$$ 
+           `-.                            :$$$;$$$$$$$$$;$$$$$ 
+              `-.                        .-T$$$$P$$$$$P d$$$$; 
+                 `.     `.     .*      .'   T$$$b`T$P.sd$$$$P  
+                   `.     `-  '      .'      `T$$b$$$$$$$$P'   
+                     `.            .'          `T.T$$$$P$$$b.  
+                       `.        .'             :$$$$P'd$$$$$;  
+                         `.    .'               $$$$$:d$;$$$$$.
+                           `..'                 :$$$$;$$$b`T$$;
+                                                 T$$$:$$$$; $$$
+                                                  T$$$T$$$;d$$;
+                                                   `T$b`T$$$$P 
+                                                     `*b T$P'`,
+            `     _                      _______                      _
+  _dMMMb._              .adOOOOOOOOOba.              _,dMMMb_
+ dP'  ~YMMb            dOOOOOOOOOOOOOOOb            aMMP~  `Yb
+ V      ~"Mb          dOOOOOOOOOOOOOOOOOb          dM"~      V
+          `Mb.       dOOOOOOOOOOOOOOOOOOOb       ,dM'
+           `YMb._   |OOOOOOOOOOOOOOOOOOOOO|   _,dMP'
+      __     `YMMM| OP'~"YOOOOOOOOOOOP"~`YO |MMMP'     __
+    ,dMMMb.     ~~' OO     `YOOOOOP'     OO `~~     ,dMMMb.
+ _,dP~  `YMba_      OOb      `OOO'      dOO      _aMMP'  ~Yb._
+
+             `YMMMM\`OOOo     OOO     oOOO'/MMMMP'
+     ,aa.     `~YMMb `OOOb._,dOOOb._,dOOO'dMMP~'       ,aa.
+   ,dMYYMba._         `OOOOOOOOOOOOOOOOO'          _,adMYYMb.
+  ,MP'   `YMMba._      OOOOOOOOOOOOOOOOO       _,adMMP'   `YM.
+  MP'        ~YMMMba._ YOOOOPVVVVVYOOOOP  _,adMMMMP~       `YM
+  YMb           ~YMMMM\`OOOOI`````IOOOOO'/MMMMP~           dMP
+   `Mb.           `YMMMb`OOOI,,,,,IOOOO'dMMMP'           ,dM'
+     `'                  `OObNNNNNdOO'                   `'
+                           `~OOOOO~'   TISSUE`,
+            `                      <>
+        .-"""-.       ||::::::==========
+       /= ___  \      ||::::::==========
+      |- /~~~\  |     ||::::::==========
+      |=( '.' ) |     ||================
+      \__\_=_/__/     ||================
+       {_______}      ||================
+     /` *       `'--._||
+    /= .     [] .     { >
+   /  /|ooo     |`'--'|| 
+  (   )\_______/      ||
+   \``\/       \      ||
+    `-| ==    \_|     ||
+      /         |     ||
+     |=   >\  __/     ||
+     \   \ |- --|     ||
+      \ __| \___/     ||
+ jgs  _{__} _{__}     ||
+     (    )(    )     ||
+ ^^~  `"""  `"""  ~^^^~^^~~~^^^~^^^~^^^~^^~^`,
+            `              _-o#&&*''''?d:>b\_
+          _o/"`''  '',, dMF9MMMMMHo_
+       .o&#'        `"MbHMMMMMMMMMMMHo.
+     .o"" '         vodM*$&&HMMMMMMMMMM?.
+    ,'              $M&ood,~'`(&##MMMMMMH\
+   /               ,MMMMMMM#b?#bobMMMMHMMML
+  &              ?MMMMMMMMMMMMMMMMM7MMM$R*Hk
+ ?$.            :MMMMMMMMMMMMMMMMMMM/HMMM|`*L
+|               |MMMMMMMMMMMMMMMMMMMMbMH'   T,
+$H#:            `*MMMMMMMMMMMMMMMMMMMMb#}'  `?
+]MMH#             ""*""""*#MMMMMMMMMMMMM'    -
+MMMMMb_                   |MMMMMMMMMMMP'     :
+HMMMMMMMHo                 `MMMMMMMMMT       .
+?MMMMMMMMP                  9MMMMMMMM}       -
+-?MMMMMMM                  |MMMMMMMMM?,d-    '
+ :|MMMMMM-                 `MMMMMMMT .M|.   :
+  .9MMM[                    &MMMMM*' `'    .
+   :9MMk                    `MMM#"        -
+     &M}                     `          .-
+      `&.                             .
+        `~,   .                     ./
+            . _                  .-
+              '`--._,dd###pp=""'`,
+        ];
+
+        function toggleTerminal() {
+            const container = document.querySelector('.container');
+            const terminal = document.getElementById('terminal');
+            container.style.display = 'none';
+            terminal.style.display = 'block';
+            setTimeout(() => terminal.classList.add('active'), 50);
+            document.body.style.backgroundColor = '#000';
+            document.getElementById('terminal-input').focus();
+            typeText('Welcome', () => {
+                setTimeout(() => {
+                    eraseText('Welcome', () => {
+                        typeText('You are now in the interactive terminal for my website.\nType "help" or "info" for website information.', () => {
+                            printPrompt();
+                        });
+                    });
+                }, 420);
+            });
+        }
+
+        function typeText(text, callback, speed = 40) {
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    printToTerminal(text.charAt(i), false);
+                    i++;
+                    setTimeout(type, speed);
+                } else if (callback) {
+                    callback();
+                }
+            }
+            type();
+        }
+
+        function eraseText(text, callback, speed = 30) {
+            let i = text.length;
+            function erase() {
+                if (i > 0) {
+                    const output = document.getElementById('terminal-output');
+                    output.innerHTML = output.innerHTML.slice(0, -1);
+                    i--;
+                    setTimeout(erase, speed);
+                } else if (callback) {
+                    callback();
+                }
+            }
+            erase();
+        }
+
+        function handleNameClick() {
+            nameClickCount++;
+            if (nameClickCount === 1) {
+                document.getElementById('name').textContent = 'younes@younes.ca';
+            } else if (nameClickCount === 2) {
+                toggleTerminal();
+            }
+        }
+
+        function handleHighlightClick(event) {
+            if (event.target.classList.contains('highlight') &&
+                ['cryptography', 'cyber security'].includes(event.target.dataset.keyword)) {
+                toggleTerminal();
+            }
+        }
+
+        function printToTerminal(text, newLine = true) {
+            const output = document.getElementById('terminal-output');
+            if (newLine) {
+                output.innerHTML += text + '\n';
+            } else {
+                output.innerHTML += text;
+            }
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function printPrompt() {
+            let prompt = currentDirectory === '/' ? '$ ' : currentDirectory + ' $ ';
+            document.getElementById('prompt').textContent = prompt;
+        }
+
+        function handleCommand(command) {
+            const args = command.trim().split(' ');
+            const cmd = args[0].toLowerCase();
+
+            if (command.trim()) {
+                commandHistory.push(command.trim());
+                historyIndex = commandHistory.length;
+            }
+
+            switch(cmd) {
+                case 'help':
+                    if (args.length > 1) {
+                        handleHelpCommand(args[1]);
+                    } else {
+                        printToTerminal('Available commands: cd, ls, info, art, help, clear');
+                        printToTerminal('Type "help [command]" to learn more about that command.');
+                    }
+                    break;
+                case 'clear':
+                    document.getElementById('terminal-output').innerHTML = '';
+                    break;
+                case 'cd':
+                    changeDirectory(args[1]);
+                    break;
+                case 'ls':
+                    listDirectory();
+                    break;
+                case 'info':
+                    streamText('Younes Brahimi - Security Software Engineer\nWant to learn more about me? Type "more".', 30);
+                    break;
+                case 'art':
+                    const art = asciiArts[Math.floor(Math.random() * asciiArts.length)];
+                    printToTerminal(art);
+                    break;
+                case 'leaks.exe':
+                    if (currentDirectory === '/usr') {
+                        checkLeaks();
+                    } else {
+                        printToTerminal('Command not found. Navigate to /usr first.');
+                    }
+                    break;
+                case 'whereami':
+                    if (currentDirectory === '/usr') {
+                        printToTerminal('Check your geolocation: <a href="https://browserleaks.com/geo" target="_blank">https://browserleaks.com/geo</a>');
+                    } else {
+                        printToTerminal('Command not found. Navigate to /usr first.');
+                    }
+                    break;
+                case 'haveibeenpwned.exe':
+                    if (currentDirectory === '/usr') {
+                        printToTerminal('A data leak occurs when unauthorized individuals gain access to your personal data.');
+                        printToTerminal('If they match your password\'s hash, they could use it to access your accounts.');
+                        printToTerminal('Check if your info has been involved in a data leak here: <a href="https://haveibeenpwned.com" target="_blank">https://haveibeenpwned.com</a>');
+                    } else {
+                        printToTerminal('Command not found. Navigate to /usr first.');
+                    }
+                    break;
+                default:
+                    if (currentDirectory === '/etc/shadow' && cmd === 'passwd.test') {
+                        runPasswordTest();
+                    } else if (currentDirectory === '/misc' && miscLinks.hasOwnProperty(cmd)) {
+                        openMiscContent(cmd);
+                    } else {
+                        printToTerminal(`Command not found: ${cmd}`);
+                    }
+            }
+            printPrompt();
+        }
+
+        function changeDirectory(dir) {
+            if (!dir) {
+                currentDirectory = '/';
+            } else if (dir === '..') {
+                const parts = currentDirectory.split('/');
+                parts.pop();
+                currentDirectory = parts.join('/') || '/';
+            } else {
+                const newPath = currentDirectory === '/' ? `/${dir}` : `${currentDirectory}/${dir}`;
+                if (fileSystem[newPath]) {
+                    currentDirectory = newPath;
+                } else {
+                    printToTerminal(`Directory not found: ${dir}`);
+                }
+            }
+            printPrompt();
+        }
+
+        function listDirectory() {
+            const contents = fileSystem[currentDirectory] || [];
+            printToTerminal(contents.join('  '));
+        }
+
+        function runPasswordTest() {
+            printToTerminal('Enter a password to test its strength:');
+            document.getElementById('terminal-input').type = 'password';
+            document.getElementById('terminal-input').onkeydown = function(e) {
+                if (e.key === 'Enter') {
+                    const password = this.value;
+                    printToTerminal('I hope you didn't put your real password here. Don\'t trust people like that.');
+                    printToTerminal('Remember to always use Multi-Factor Authentication (MFA) for better security!');
+                    printToTerminal('<a href="https://en.wikipedia.org/wiki/Multi-factor_authentication" target="_blank">Learn more about MFA</a>');
+                    document.getElementById('terminal-input').type = 'text';
+                    document.getElementById('terminal-input').onkeydown = null;
+                    printPrompt();
+                }
+            };
+        }
+
+        function checkLeaks() {
+            printToTerminal('Check for DNS leaks: <a href="https://www.dnsleaktest.com/" target="_blank">https://www.dnsleaktest.com/</a>');
+            printToTerminal('Check for WebRTC leaks: <a href="https://browserleaks.com/webrtc" target="_blank">https://browserleaks.com/webrtc</a>');
+        }
+
+        function streamText(text, speed = 30) {
+            let i = 0;
+            function stream() {
+                if (i < text.length) {
+                    printToTerminal(text.charAt(i), false);
+                    i++;
+                    setTimeout(stream, speed);
+                } else {
+                    printToTerminal('', true);
+                }
+            }
+            stream();
+        }
+
+        function openMiscContent(fileName) {
+            const frame = document.getElementById('misc-frame');
+            const frameHeader = document.getElementById('misc-frame-header');
+            const frameIframe = document.getElementById('misc-frame-iframe');
+            const miscFileName = document.getElementById('misc-filename');
+
+            // Close existing content if open
+            if (frame.style.display === 'block') {
+                closeMiscContent();
+            }
+
+            miscFileName.textContent = fileName;
+            frameIframe.src = miscLinks[fileName];
+            frame.style.display = 'block';
+
+            // Maximize button functionality
+            document.getElementById('maximize-btn').onclick = function() {
+                if (frame.style.width === '100%' && frame.style.height === '100%') {
+                    frame.style.width = '560px';
+                    frame.style.height = '315px';
+                    frame.style.right = '20px';
+                    frame.style.top = '20px';
+                    document.getElementById('maximize-btn').textContent = '⌞ ⌝'; // Change back to maximize button
+                } else {
+                    frame.style.width = '100%';
+                    frame.style.height = '100%';
+                    frame.style.right = '0';
+                    frame.style.top = '0';
+                    document.getElementById('maximize-btn').textContent = '⌞⌝'; // Change to minimize button
+                }
+            };
+
+            // Open in new tab functionality
+            document.getElementById('open-tab-btn').onclick = function() {
+                window.open(miscLinks[fileName].replace('/embed/', '/watch?v='), '_blank');
+            };
+
+            // Close button functionality
+            document.getElementById('close-btn').onclick = closeMiscContent;
+
+            makeElementDraggable(frame);
+        }
+
+        function closeMiscContent() {
+            const frame = document.getElementById('misc-frame');
+            const frameIframe = document.getElementById('misc-frame-iframe');
+
+            frame.style.display = 'none';
+            frame.style.width = '560px';
+            frame.style.height = '315px';
+            frame.style.right = '20px';
+            frame.style.top = '20px';
+            frameIframe.src = ''; // Stop the video/audio or unload the content
+        }
+
+        function handleHelpCommand(command) {
+            switch(command.toLowerCase()) {
+                case 'cd':
+                    printToTerminal('cd: Change the current directory.');
+                    printToTerminal('Usage: cd [directory]');
+                    break;
+                case 'ls':
+                    printToTerminal('ls: List the contents of the current directory.');
+                    printToTerminal('Usage: ls');
+                    break;
+                case 'info':
+                    printToTerminal('info: Display information about Younes Brahimi.');
+                    printToTerminal('Usage: info');
+                    break;
+                case 'art':
+                    printToTerminal('art: Display random ASCII art.');
+                    printToTerminal('Usage: art');
+                    break;
+                case 'clear':
+                    printToTerminal('clear: Clear the terminal screen.');
+                    printToTerminal('Usage: clear');
+                    break;
+                case 'help':
+                    printToTerminal('help: Display help information.');
+                    printToTerminal('Usage: help [command]');
+                    break;
+                default:
+                    printToTerminal(`No help available for ${command}`);
+            }
+        }
+
+        function makeElementDraggable(elmnt) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            const header = elmnt.querySelector(".misc-content-frame-header");
+            if (header) {
+                header.onmousedown = dragMouseDown;
+                header.ontouchstart = dragMouseDown; // For touch devices
+            }
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                pos3 = e.clientX || e.touches[0].clientX;
+                pos4 = e.clientY || e.touches[0].clientY;
+                document.onmouseup = closeDragElement;
+                document.ontouchend = closeDragElement;
+                document.onmousemove = elementDrag;
+                document.ontouchmove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                pos1 = pos3 - (e.clientX || e.touches[0].clientX);
+                pos2 = pos4 - (e.clientY || e.touches[0].clientY);
+                pos3 = e.clientX || e.touches[0].clientX;
+                pos4 = e.clientY || e.touches[0].clientY;
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+                document.ontouchend = null;
+                document.ontouchmove = null;
+            }
+        }
+
+        document.getElementById('name').addEventListener('click', handleNameClick);
+        document.getElementById('about').addEventListener('click', handleHighlightClick);
+        document.getElementById('terminal-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const command = this.value;
+                printToTerminal(currentDirectory + ' $ ' + command);
+                handleCommand(command);
+                this.value = '';
+                historyIndex = commandHistory.length; // Reset history index to latest command
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                const input = this.value;
+                const possibleCompletions = fileSystem[currentDirectory].filter(item => item.startsWith(input));
+                
+                if (possibleCompletions.length === 1) {
+                    this.value = possibleCompletions[0];
+                } else if (possibleCompletions.length > 1) {
+                    printToTerminal(possibleCompletions.join('  '));
+                    printPrompt();
+                    this.value = input;
+                }
+            } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (e.key === 'ArrowUp') {
+                    if (historyIndex > 0) historyIndex--;
+                } else if (historyIndex < commandHistory.length) historyIndex++;
+                this.value = commandHistory[historyIndex] || '';
+            }
+            printPrompt();
+        });
+    </script>
+</body>
+</html>
